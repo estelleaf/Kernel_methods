@@ -53,7 +53,9 @@ class KLR():
             alpha=np.linalg.inv(np.transpose(K).dot(W).dot(K)+self.n*self.lamb*K).dot(np.transpose(Z).dot(W).dot(K))
             m=K.dot(alpha)
             P=np.diag(log_prime(m))
+            print P
             W=np.diag(log_primeprime(m))
+            print W
             Z=m-np.linalg.inv(W).dot(P).dot(y)
             J=(1./self.n)*(np.transpose(K.dot(alpha)-Z).dot(W).dot(K.dot(alpha)-Z))+self.lamb*np.transpose(alpha).dot(K).dot(alpha)
             print i, J

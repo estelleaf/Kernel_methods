@@ -30,11 +30,14 @@ class KLR():
         
     def fit(self, X, y):
         #K=self.ker(X)
+        alpha_list=[]
+        J_list=[]
         K=X.dot(np.transpose(X))
         temp=(K.dot(self.alpha0))*y
         P=np.diag(log_prime(temp))
         W=np.diag(log_primeprime(temp))
         Z=K.dot(alpha0)-np.linalg.inv(W).dot(P).dot(y)
+        alpha_list.append(alpha0)
         for i in range(15):
             alpha=np.linalg.inv(np.transpose(K).dot(W).dot(K)+self.n*self.lamb*K).dot(np.transpose(Z).dot(W).dot(K))
             m=K.dot(alpha)
@@ -45,8 +48,10 @@ class KLR():
             Z=m-np.linalg.inv(W).dot(P).dot(y)
             #J=(1./self.n)*(np.transpose(K.dot(alpha)-Z).dot(W).dot(K.dot(alpha)-Z))+self.lamb*np.transpose(alpha).dot(K).dot(alpha)
             J=(1./self.n)*sum(logistic(y*m))+(self.lamb/2.)*np.transpose(alpha).dot(K).dot(alpha)
+            alpha_list.append(alpha)
+            J_list.append(J)
             print i, J
-        return alpha
+        return alpha,J_list,alpha_list
         
         
         

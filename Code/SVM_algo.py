@@ -7,7 +7,7 @@ def qp(P, q, A, b, C=100, l=1e-8, verbose=True):
     # Gram matrix
     n = P.shape[0]
     P = cvxopt.matrix(P)
-    A = cvxopt.matrix(A, (1, n))
+    A = cvxopt.matrix(A)
     q = cvxopt.matrix(-q)
     b = cvxopt.matrix(b)
 
@@ -25,7 +25,7 @@ def qp(P, q, A, b, C=100, l=1e-8, verbose=True):
 
 def svm_solver(Kernel, X, y, C=100):
     
-    alpha = qp(P = Kernel, q = y, A = np.ones(X.shape[0]), b = 0, C = C, l=1e-8, verbose=False)
+    alpha = qp(P = Kernel(X), q = y, A = np.ones(X.shape[0]), b = 0, C = C, l=1e-8, verbose=False)
     
     idx_support = np.where(np.abs(mu) > 1e-5)[0]
     

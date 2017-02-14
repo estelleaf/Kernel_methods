@@ -25,5 +25,5 @@ def gaussian_kernel(x, y, gamma):
 def laplacian_kernel(x, y, sigma):
     return np.exp(-np.linalg.norm(x-y, ord=2)/sigma)
     
-def kernel_test(X):
+def kernel_test(X,X):
     return X.dot(np.transpose(X))

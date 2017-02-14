@@ -56,10 +56,10 @@ print("Le classifieur propose une bonne prédiction dans {} % des cas.".format(
 
 #KLR
 
-n=X.shape[0]
+n=X_train.shape[0]
 alpha0=np.zeros(n)
 model=KLR(alpha0,0.5)
-model.fit(X,y)
+model.fit(X_train,y_train)
 #y_pred=model.predict(X_test)
 
 # accuracy : pourcentage de bonnes predictions

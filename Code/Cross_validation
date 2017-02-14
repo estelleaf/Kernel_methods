@@ -1,0 +1,72 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Feb 14 11:41:27 2017
+
+@author: estelleaflalo
+"""
+
+import pandas as pd
+import numpy as np
+from sklearn.cross_validation import train_test_split
+from sklearn.metrics import accuracy_score
+import KLR_algo
+import SVM_algo
+import kernel_functions
+
+#estelle
+X_tr_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Xtr.csv'
+Y_tr_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Ytr.csv'
+
+df_X=pd.read_csv(X_tr_path, header=None)
+df_X = df_X.iloc[:, :-1]
+df_y=pd.read_csv(Y_tr_path, header=None)
+#df_y= df_y.iloc[:, :-1]
+
+X=df_X.as_matrix()
+y=df_y.as_matrix()[:,1]
+y=y[1:]
+y=y.astype(float)
+
+
+#Cross validation
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.8,
+                                                    random_state=0)
+print("Nb d'échantillons d'apprentissage :  {}".format(X_train.shape[0]))
+print("Nb d'échantillons de validation :    {}".format(X_test.shape[0]))
+
+
+
+#SVM
+
+model=SVM(0.5,kernel_test,100)
+model.fit(X_train,y_train)
+y_pred=model.predict(X_test)
+
+
+
+# accuracy : pourcentage de bonnes predictions
+print("Accuracy       : ", accuracy_score(y_test, y_pred))
+print("Accuracy bis:  : ", np.mean(y_test == y_pred)) # mesure d'erreur 0/1
+
+print("Le classifieur propose une bonne prédiction dans {} % des cas.".format(
+      100 * accuracy_score(y_test, y_pred))) 
+
+
+#KLR
+
+n=X.shape[0]
+alpha0=np.zeros(n)
+model=KLR(alpha0,0.5)
+model.fit(X,y)
+#y_pred=model.predict(X_test)
+
+# accuracy : pourcentage de bonnes predictions
+print("Accuracy       : ", accuracy_score(y_test, y_pred))
+print("Accuracy bis:  : ", np.mean(y_test == y_pred)) # mesure d'erreur 0/1
+
+print("Le classifieur propose une bonne prédiction dans {} % des cas.".format(
+      100 * accuracy_score(y_test, y_pred))) 
+
+

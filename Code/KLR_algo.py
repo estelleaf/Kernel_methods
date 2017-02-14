@@ -8,21 +8,7 @@ Created on Mon Feb 13 16:11:29 2017
 import math
 import numpy as np
 import pandas as pd
-
 import kernel_functions
-
-X_tr_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Xtr.csv'
-Y_tr_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Ytr.csv'
-
-df_X=pd.read_csv(X_tr_path, header=None)
-df_X = df_X.iloc[:, :-1]
-df_y=pd.read_csv(Y_tr_path, header=None)
-#df_y= df_y.iloc[:, :-1]
-
-X=df_X.as_matrix()
-y=df_y.as_matrix()[:,1]
-y=y[1:]
-y=y.astype(float)
 
 def logistic(u):
     return np.log(1./(1+np.exp(-u)))
@@ -71,5 +57,8 @@ class KLR():
 
     def predict_proba(self, X):
         return self.clf.predict_proba(X)
-
-
+        
+n=X.shape[0]
+alpha0=np.zeros(n)
+model=KLR(alpha0,0.5)
+model.fit(X,y)

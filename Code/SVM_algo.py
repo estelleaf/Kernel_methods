@@ -6,13 +6,13 @@ def qp(P, q, A, b, C=100, l=1e-8, verbose=True):
     
     # Gram matrix
     n = P.shape[0]
-    P = cvxopt.matrix(P)
-    A = cvxopt.matrix(A)
-    q = cvxopt.matrix(-q)
-    b = cvxopt.matrix(b)
+    P = cvxopt.matrix(P,tc='d')
+    A = cvxopt.matrix(A,tc='d')
+    q = cvxopt.matrix(-q,tc='d')
+    b = cvxopt.matrix(b,tc='d')
 
-    G = cvxopt.matrix(np.concatenate([np.diag(np.ones(n) * -1), np.diag(np.ones(n))], axis=0))
-    h = cvxopt.matrix(np.concatenate([np.zeros(n), C * np.ones(n)]))
+    G = cvxopt.matrix(np.concatenate([np.diag(np.ones(n) * -1), np.diag(np.ones(n))], axis=0),tc='d')
+    h = cvxopt.matrix(np.concatenate([np.zeros(n), C * np.ones(n)]),tc='d')
 
     # Solve QP problem
     cvxopt.solvers.options['show_progress'] = verbose
@@ -25,7 +25,7 @@ def qp(P, q, A, b, C=100, l=1e-8, verbose=True):
 
 def svm_solver(Kernel, X, y, C=100):
     
-    alpha = qp(P = Kernel(X), q = y, A = np.ones(X.shape[0]), b = 0, C = C, l=1e-8, verbose=False)
+    alpha = qp(P = Kernel(X), q = y, A = np.ones(X.shape[0]) , b = 0, C = C, l=1e-8, verbose=False)
     
     idx_support = np.where(np.abs(mu) > 1e-5)[0]
     
@@ -33,6 +33,7 @@ def svm_solver(Kernel, X, y, C=100):
     
     return alpha_support, idx_support
     
+svm_solver(kernel_test,X_train,y_train)
 
 def compute_b(Kernel, y, alpha_support, idx_support):
     # DONE

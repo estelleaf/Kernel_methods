@@ -20,8 +20,8 @@ def log_primeprime(u):
     return 1.*np.exp(u)/(1+np.exp(u))**2
 
 class KLR():
-    def __init__(self,alpha_init,lamda):#,kernel):
-        #self.ker=kernel
+    def __init__(self,alpha_init,lamda,kernel):
+        self.ker=kernel
         self.alpha0=alpha_init
         self.n=alpha_init.shape[0]
         self.lamb=lamda
@@ -29,7 +29,7 @@ class KLR():
         
         
     def fit(self, X, y):
-        #K=self.ker(X,X)
+        K=self.ker(X,X)
         alpha_list=[]
         J_list=[]
         K=X.dot(np.transpose(X))
@@ -38,7 +38,7 @@ class KLR():
         W=np.diag(log_primeprime(temp))
         Z=K.dot(self.alpha0)-np.linalg.inv(W).dot(P).dot(y)
         alpha_list.append(alpha0)
-        for i in range(15):
+        for i in range(50):
             alpha=np.linalg.inv(np.transpose(K).dot(W).dot(K)+self.n*self.lamb*K).dot(np.transpose(Z).dot(W).dot(K))
             m=K.dot(alpha)
             P=np.diag(log_prime(m*y))
@@ -52,13 +52,14 @@ class KLR():
             J_list.append(J)
             print i, J
         self.alpha_op=alpha
+        self.X_train=X
         return alpha,J_list,alpha_list
         
         
         
-    def fit_predict(self, Xtr,Ytr,Xte):
-        K=self.ker(Xtr,Xte)
-        return K.dot(self.alpha_op)
+    def predict(self,Xte):
+        K=self.ker(Xte,self.X_train)
+        return sign(K.dot(self.alpha_op))
         
         
 

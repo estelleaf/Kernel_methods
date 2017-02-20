@@ -41,5 +41,5 @@ def laplacian_kernel(X, Y, sigma):
         print (i)
     return K
     
-def kernel_test(X):
+def kernel_test(X,X):
     return X.dot(np.transpose(X))

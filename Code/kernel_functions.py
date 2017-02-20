@@ -10,11 +10,17 @@ import numpy as np
 
 #Linear Kernel
 def linear_kernel(X,Y, c):
-    return np.dot(X, Y.T) + c
+    return np.dot(X, Y.T)
 
 #Polynomial kernel
 def polynomial_kernel(X, Y, a, b, c, d):
-    return (a * np.dot(X.T, Y) + c)**d
+    
+    K = np.zeros((X.shape[0], Y.shape[0]))
+    for i in range(X.shape[0]):
+        for j in range(Y.shape[0]):
+            K[i,j] = (a * np.dot(X[i].T, Y[j]) + c)**d
+            print (i)
+    return K
 
 
 #Gaussian kernel

@@ -36,7 +36,7 @@ def svm_solver(K, X, y, C=100):
     
     return alpha_support, idx_support
     
-svm_solver(kernel_test,X_train,y_train)
+svm_solver(kernel_test(X_train,X_train),X_train,y_train)
 
 def compute_b(Kernel, y, alpha_support, idx_support):
     # DONE
@@ -57,7 +57,7 @@ class SVM():
         self.lbda = lbd
 
     def fit(self, X_tr, y_tr):
-        K=self.kernel(X)
+        K=self.kernel(X,X)
         a_support, idx_support = svm_solver(K, X_tr, y_tr)
         b_model = compute_b(K, y_tr, mu_support, idx_support)
         self.alpha = a_support
@@ -68,8 +68,7 @@ class SVM():
     def predict(self, X_te):
         G = self.kernel(X_te, self.X_support)
         decision = G.dot(self.alpha * y[self.idx]) + self.b
-        # Calcul du label prédit
-        y_pred = np.sign(decision)
+        y_pred = np.sign(decision)# Calcul du label predit
         return y_pred
 
 

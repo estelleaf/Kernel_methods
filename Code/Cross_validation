@@ -15,12 +15,12 @@ import SVM_algo
 import kernel_functions
 
 #estelle
-X_tr_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Xtr.csv'
-Y_tr_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Ytr.csv'
+#X_tr_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Xtr.csv'
+#Y_tr_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Ytr.csv'
 
 #Pauline
-#X_tr_path = '/Users/paulinenicolas/Documents/M2_Data_Science/Kernels/Project/Xtr.csv'
-#Y_tr_path = '/Users/paulinenicolas/Documents/M2_Data_Science/Kernels/Project/Ytr.csv'
+X_tr_path = '/Users/paulinenicolas/Documents/M2_Data_Science/Kernels/Project/Xtr.csv'
+Y_tr_path = '/Users/paulinenicolas/Documents/M2_Data_Science/Kernels/Project/Ytr.csv'
 
 df_X=pd.read_csv(X_tr_path, header=None)
 df_X = df_X.iloc[:, :-1]
@@ -40,13 +40,22 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.8,
 print("Nb d'échantillons d'apprentissage :  {}".format(X_train.shape[0]))
 print("Nb d'échantillons de validation :    {}".format(X_test.shape[0]))
 
-
-
 #SVM
+total_pred = np.zeros(len(y_test))
 
-model=SVM(0.5,kernel_test,100)
-model.fit(X_train,y_train)
-y_pred=model.predict(X_test)
+for i in range(10):
+    model = SVM_algo.SVM(0.5,kernel_functions.kernel_test,.1, i)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    print(model.score(y_test))
+    total_pred = np.hstack((total_pred,y_pred))
+
+total_pred = total_pred.reshape((11,1000)).T
+total_pred = total_pred[:,1:]
+final_pred = np.argmax(total_pred, axis=1)
+
+
+accuracy_score(np.sign(self.y_pred), y_te)
 
 
 

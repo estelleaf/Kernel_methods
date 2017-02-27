@@ -37,9 +37,9 @@ def laplacian_kernel(X, Y, sigma):
     K = np.zeros((X.shape[0], Y.shape[0]))
     for i in range(X.shape[0]):
         for j in range(Y.shape[0]):
-            K[i,j]= np.exp(-*np.linalg.norm(X[i]-Y[j], ord=2)/sigma)
+            K[i,j]= np.exp(-np.linalg.norm(X[i]-Y[j], ord=2)/sigma)
         print (i)
     return K
     
-def kernel_test(X,X):
-    return X.dot(np.transpose(X))
+def kernel_test(X,Y):
+    return X.dot(np.transpose(Y))

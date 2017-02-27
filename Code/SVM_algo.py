@@ -64,8 +64,12 @@ class SVM():
     def fit(self, X_tr, y_tr2):
         y_tr=y_tr2.copy()
         for i in range(len(y_tr)):
-            y_tr[y_tr!=self.classe]=-1
-            y_tr[y_tr==self.classe]=1
+            if y_tr[i]==self.classe:
+                y_tr[i]=1
+            else:
+                y_tr[i]=-1
+        print(y_tr[y_tr==-1].shape)
+        print(y_tr[y_tr==1].shape)
 
         self.K = self.kernel(X_tr, X_tr)
         self.a_support, self.idx_support = svm_solver(self.K, X_tr, y_tr)

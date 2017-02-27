@@ -44,7 +44,8 @@ print("Nb d'échantillons de validation :    {}".format(X_test.shape[0]))
 total_pred = np.zeros(len(y_test))
 
 for i in range(10):
-    model = SVM_algo.SVM(0.5,kernel_functions.kernel_test,.1, i)
+    classe = i
+    model = SVM_algo.SVM(0.5,kernel_functions.kernel_test,.1, classe)
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     print(model.score(y_test))

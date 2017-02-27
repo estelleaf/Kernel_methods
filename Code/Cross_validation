@@ -15,12 +15,12 @@ import SVM_algo
 import kernel_functions
 
 #estelle
-#X_tr_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Xtr.csv'
-#Y_tr_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Ytr.csv'
+X_tr_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Xtr.csv'
+Y_tr_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Ytr.csv'
 
 #Pauline
-X_tr_path = '/Users/paulinenicolas/Documents/M2_Data_Science/Kernels/Project/Xtr.csv'
-Y_tr_path = '/Users/paulinenicolas/Documents/M2_Data_Science/Kernels/Project/Ytr.csv'
+#X_tr_path = '/Users/paulinenicolas/Documents/M2_Data_Science/Kernels/Project/Xtr.csv'
+#Y_tr_path = '/Users/paulinenicolas/Documents/M2_Data_Science/Kernels/Project/Ytr.csv'
 
 df_X=pd.read_csv(X_tr_path, header=None)
 df_X = df_X.iloc[:, :-1]

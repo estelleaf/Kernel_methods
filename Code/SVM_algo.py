@@ -1,19 +1,23 @@
 import cvxopt
 import numpy as np
 import pandas as pd
+import kernel_functions
+from sklearn.metrics import accuracy_score
 
 def qp(P, q, A, b, C=100, l=1e-8, verbose=True):
     
     # Gram matrix
     n = P.shape[0]
     P = cvxopt.matrix(P)
-    A = cvxopt.matrix(A, (1, n))
-    q = q.astype(float)
-    q = cvxopt.matrix(-q)
-    b = cvxopt.matrix(b)
+    #A = cvxopt.matrix(A, (1, n))
+    q = (q).astype(float)
+    #b = cvxopt.matrix(b)
+    A=None
+    b=None
 
-    G = cvxopt.matrix(np.concatenate([np.diag(np.ones(n) * -1), np.diag(np.ones(n))], axis=0))
+    G = cvxopt.matrix(np.concatenate([np.diag(np.ones(n) * q), np.diag(np.ones(n))*-q], axis=0))
     h = cvxopt.matrix(np.concatenate([np.zeros(n), C * np.ones(n)]))
+    q = cvxopt.matrix(q)
 
 
     # Solve QP problem
@@ -26,17 +30,17 @@ def qp(P, q, A, b, C=100, l=1e-8, verbose=True):
     return alpha
 
 
-def svm_solver(K, X, y, C=100):
+def svm_solver(K, X, y, C=1.):
 
-    alpha = qp(P = K, q = y, A = np.ones(X.shape[0]), b = 0., C = C, l=1e-8, verbose=False)
+    alpha = qp(P = K, q = -y, A = np.ones(X.shape[0]), b = 0., C = C, l=1e-8, verbose=False)
     
     idx_support = np.where(np.abs(alpha) > 1e-5)[0]
     
     alpha_support = alpha[idx_support]
-    
+
     return alpha_support, idx_support
     
-svm_solver(kernel_test,X_train,y_train)
+#alpha, idx = svm_solver(kernel_functions.kernel_test(X_train,X_train),X_train,y_train)
 
 def compute_b(Kernel, y, alpha_support, idx_support):
     # DONE
@@ -51,26 +55,47 @@ def compute_b(Kernel, y, alpha_support, idx_support):
 
 class SVM():
 
-    def __init__(self,lbd,ker,c):
+    def __init__(self,lbd,ker,c, classe1):
         self.kernel = ker
         self.C = c
         self.lbda = lbd
+        self.classe = classe1
 
-    def fit(self, X_tr, y_tr):
-        K=self.kernel(X)
-        a_support, idx_support = svm_solver(K, X_tr, y_tr)
-        b_model = compute_b(K, y_tr, mu_support, idx_support)
-        self.alpha = a_support
-        self.idx = idx_support 
-        self.b = b_model
-        self.X_support = X_tr[idx_support]
+    def fit(self, X_tr, y_tr2):
+        y_tr=y_tr2.copy()
+        for i in range(len(y_tr)):
+            if y_tr[i]==self.classe:
+                y_tr[i]=1
+            else:
+                y_tr[i]=-1
+        print(y_tr[y_tr==-1].shape)
+        print(y_tr[y_tr==1].shape)
+
+        self.K = self.kernel(X_tr, X_tr)
+        self.a_support, self.idx_support = svm_solver(self.K, X_tr, y_tr)
+        self.b_model = compute_b(self.K, y_tr, self.a_support, self.idx_support)
+        self.X_support = X_tr[self.idx_support]
+        self.y_support = y_tr[self.idx_support]
 
     def predict(self, X_te):
         G = self.kernel(X_te, self.X_support)
-        decision = G.dot(self.alpha * y[self.idx]) + self.b
-        # Calcul du label prédit
-        y_pred = np.sign(decision)
-        return y_pred
+        decision = G.dot(self.a_support) #+ self.b_model
+        self.y_pred = decision# Calcul du label predit
+        return self.y_pred
+    
+    def score(self, y_te2):
+        y_te=y_te2.copy()
+        for i in range(len(y_te)):
+            y_te[y_te!=self.classe]=-1
+            y_te[y_te==self.classe]=1
+
+        return accuracy_score(np.sign(self.y_pred), y_te)
+        
+    
+#################################################################
+
+    
+
 
 
 

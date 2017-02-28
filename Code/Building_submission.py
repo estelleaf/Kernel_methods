@@ -14,6 +14,7 @@ import numpy as np
 X_tr_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Xtr.csv'
 Y_tr_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Ytr.csv'
 X_te_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Xte.csv'
+submission_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Submission.csv'
 
 print "Loading the dataframes"
 df_X=pd.read_csv(X_tr_path, header=None)
@@ -58,7 +59,7 @@ nblocks=4
 ncells=4
 print "The parameters of the HOG model are the following : number of bins for the orientations histograms = %d, number of blocks : %d, number of cells per block : %d"%(nbins,nblocks,ncells)
 
-temp1=np.zeros(324) #nbins (ici 9) * nb_position_blocks (ici 9) * nombre de cellules par block (4)
+temp1=np.zeros(9*ncells*nbins) #nbins (ici 9) * nb_position_blocks (ici 9) * nombre de cellules par block (4)
 for i in range(X_train.shape[0]):
     image=X_train[i]
     gx,gy=HOG.gradients(image)
@@ -70,7 +71,7 @@ for i in range(X_train.shape[0]):
 new_features_train=temp1[1:]     
 
 
-temp2=np.zeros(324) #nbins (ici 9) * nb_position_blocks (ici 9) * nombre de cellules par block (4)
+temp2=np.zeros(9*ncells*nbins) #nbins (ici 9) * nb_position_blocks (ici 9) * nombre de cellules par block (4)
 for i in range(X_test.shape[0]):
     image=X_test[i]
     gx,gy=HOG.gradients(image)
@@ -81,17 +82,20 @@ for i in range(X_test.shape[0]):
         
 new_features_test=temp2[1:]       
 
-
 #SVM
 print "Building the SVM-multiclass model"
 
 
-kernel=kernel_functions.kernel_test
+kernel=kernel_functions.gaussian_kernel
 kernel_name="kernel_functions.kernel_test"
 print ("We used the %s for the SVM"%(kernel_name))
 
+
+X_train=new_features_train
+X_test=new_features_test
+
 Ktrain = kernel(X_train, X_train)
-total_pred = np.zeros(len(X_test[0]))
+total_pred = np.zeros(X_test.shape[0])
 for i in range(10):
     classe = i
     model = SVM_algo.SVM(0.5,Ktrain,kernel,.1, classe)
@@ -99,7 +103,14 @@ for i in range(10):
     y_pred = model.predict(X_test)
     total_pred = np.hstack((total_pred,y_pred))
 
-total_pred = total_pred.reshape((11,1000)).T
+total_pred = total_pred.reshape((11,X_test.shape[0])).T
 total_pred = total_pred[:,1:]
 final_pred = np.argmax(total_pred, axis=1)
+
+
+result=np.vstack((np.arange(1,X_test.shape[0]+1),final_pred)).T
+
+df = pd.DataFrame(result,columns=('Id','Prediction'))
+df.to_csv(submission_path,sep=',',index=False)
+
 

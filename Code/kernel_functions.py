@@ -29,7 +29,6 @@ def gaussian_kernel(X, Y):
     for i in range(X.shape[0]):
         for j in range(Y.shape[0]):
             K[i,j] = np.exp(-0.5*np.linalg.norm(X[i]-Y[j], ord=2)**2)
-            print (i)
     return K
 
 #Laplacian Kernel

@@ -6,33 +6,10 @@ Created on Mon Feb 27 11:41:59 2017
 @author: domitillecoulomb
 """
 
-#X_tr_path = '/Users/paulinenicolas/Documents/M2_Data_Science/Kernels/Project/Xtr.csv'
-#Y_tr_path = '/Users/paulinenicolas/Documents/M2_Data_Science/Kernels/Project/Ytr.csv'
-X_tr_path = '/Users/domitillecoulomb/M2_DataSciences/Kernels/Xtr.csv'
-Y_tr_path = '/Users/domitillecoulomb/M2_DataSciences/Kernels/Ytr.csv'
 
 import pandas as pd
 from numpy.linalg import norm
 import numpy as np
-
-df_X=pd.read_csv(X_tr_path, header=None)
-df_X = df_X.iloc[:, :-1]
-df_y=pd.read_csv(Y_tr_path, header=None)
-#df_y= df_y.iloc[:, :-1]
-
-X=df_X.as_matrix()
-y=df_y.as_matrix()[:,1]
-y=y[1:]
-y=y.astype(float)
-
-"""
-Preprocessing
-"""
-X_reshape = X.reshape((5000,3,32,32)).transpose(0,2,3,1)
-for i in range(len(X_reshape)):
-    X_reshape[i,:,:,0] -= X_reshape[i,:,:,0].min()
-    X_reshape[i,:,:,1] -= X_reshape[i,:,:,1].min()
-    X_reshape[i,:,:,2] -= X_reshape[i,:,:,2].min()
 
 """
 Gradients
@@ -112,10 +89,35 @@ def hog_vector(allhisto):
             temp_old=temp
     temp=temp[1:]
     return temp
+    
+'''
+#X_tr_path = '/Users/paulinenicolas/Documents/M2_Data_Science/Kernels/Project/Xtr.csv'
+#Y_tr_path = '/Users/paulinenicolas/Documents/M2_Data_Science/Kernels/Project/Ytr.csv'
+X_tr_path = '/Users/domitillecoulomb/M2_DataSciences/Kernels/Xtr.csv'
+Y_tr_path = '/Users/domitillecoulomb/M2_DataSciences/Kernels/Ytr.csv'
+
+df_X=pd.read_csv(X_tr_path, header=None)
+df_X = df_X.iloc[:, :-1]
+df_y=pd.read_csv(Y_tr_path, header=None)
+#df_y= df_y.iloc[:, :-1]
+
+X=df_X.as_matrix()
+y=df_y.as_matrix()[:,1]
+y=y[1:]
+y=y.astype(float)
+
+"""
+Preprocessing
+"""
+X_reshape = X.reshape((5000,3,32,32)).transpose(0,2,3,1)
+for i in range(len(X_reshape)):
+    X_reshape[i,:,:,0] -= X_reshape[i,:,:,0].min()
+    X_reshape[i,:,:,1] -= X_reshape[i,:,:,1].min()
+    X_reshape[i,:,:,2] -= X_reshape[i,:,:,2].min()
 
 
 nbins=9
-old=np.zeros(324)
+old=np.zeros(324) #nbins (ici 9) * nb_position_blocks (ici 9) * nombre de cellules par block (4)
 for i in range(X_reshape.shape[0]):
     image=X_reshape[i]
     gx,gy=gradients(image)
@@ -150,3 +152,4 @@ model=SVC(C=1,kernel='linear')
 model.fit(X_train,y_train)
 y_pred=model.predict(X_test)
 accuracy_score(y_test, y_pred)
+'''

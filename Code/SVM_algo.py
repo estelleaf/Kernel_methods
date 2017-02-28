@@ -55,7 +55,8 @@ def compute_b(Kernel, y, alpha_support, idx_support):
 
 class SVM():
 
-    def __init__(self,lbd,ker,c, classe1):
+    def __init__(self,lbd,Ktrain,ker,c, classe1):
+        self.Ktrain=Ktrain
         self.kernel = ker
         self.C = c
         self.lbda = lbd
@@ -71,9 +72,10 @@ class SVM():
         print(y_tr[y_tr==-1].shape)
         print(y_tr[y_tr==1].shape)
 
-        self.K = self.kernel(X_tr, X_tr)
-        self.a_support, self.idx_support = svm_solver(self.K, X_tr, y_tr)
-        self.b_model = compute_b(self.K, y_tr, self.a_support, self.idx_support)
+        #self.K = self.kernel(X_tr, X_tr)
+    
+        self.a_support, self.idx_support = svm_solver(self.Ktrain, X_tr, y_tr)
+        self.b_model = compute_b(self.Ktrain, y_tr, self.a_support, self.idx_support)
         self.X_support = X_tr[self.idx_support]
         self.y_support = y_tr[self.idx_support]
 

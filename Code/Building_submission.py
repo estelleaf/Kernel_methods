@@ -14,7 +14,7 @@ import numpy as np
 X_tr_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Xtr.csv'
 Y_tr_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Ytr.csv'
 X_te_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Xte.csv'
-submission_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Submission.csv'
+submission_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Submissionnbins10.csv'
 
 print "Loading the dataframes"
 df_X=pd.read_csv(X_tr_path, header=None)
@@ -54,7 +54,7 @@ for i in range(len(Xte_reshape)):
 X_test=Xte_reshape    
 
 print ("Building the features matrices (train and test) based on HOG model")
-nbins=9
+nbins=10
 nblocks=4
 ncells=4
 print "The parameters of the HOG model are the following : number of bins for the orientations histograms = %d, number of blocks : %d, number of cells per block : %d"%(nbins,nblocks,ncells)
@@ -87,7 +87,7 @@ print "Building the SVM-multiclass model"
 
 
 kernel=kernel_functions.gaussian_kernel
-kernel_name="kernel_functions.kernel_test"
+kernel_name="gaussian kernel"
 print ("We used the %s for the SVM"%(kernel_name))
 
 

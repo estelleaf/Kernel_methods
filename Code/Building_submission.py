@@ -59,7 +59,8 @@ nblocks=4
 ncells=4
 print "The parameters of the HOG model are the following : number of bins for the orientations histograms = %d, number of blocks : %d, number of cells per block : %d"%(nbins,nblocks,ncells)
 
-temp1=np.zeros(9*ncells*nbins) #nbins (ici 9) * nb_position_blocks (ici 9) * nombre de cellules par block (4)
+#temp1=np.zeros(9*ncells*nbins) #mean #nbins (ici 9) * nb_position_blocks (ici 9) * nombre de cellules par block (4)
+temp1=np.zeros(9*ncells*nbins*3)  #all channels
 for i in range(X_train.shape[0]):
     image=X_train[i]
     gx,gy=HOG.gradients(image)
@@ -69,9 +70,10 @@ for i in range(X_train.shape[0]):
         print i
         
 new_features_train=temp1[1:]     
-new_features_train=np.sqrt(new_features_train)
+#new_features_train=np.sqrt(new_features_train)
 
-temp2=np.zeros(9*ncells*nbins) #nbins (ici 9) * nb_position_blocks (ici 9) * nombre de cellules par block (4)
+#temp2=np.zeros(9*ncells*nbins) #mean #nbins (ici 9) * nb_position_blocks (ici 9) * nombre de cellules par block (4)
+temp2=np.zeros(9*ncells*nbins*3)  #all channels
 for i in range(X_test.shape[0]):
     image=X_test[i]
     gx,gy=HOG.gradients(image)
@@ -81,7 +83,7 @@ for i in range(X_test.shape[0]):
         print i
         
 new_features_test=temp2[1:]       
-new_features_test=np.sqrt(new_features_test)
+#new_features_test=np.sqrt(new_features_test)
 #SVM
 print "Building the SVM-multiclass model"
 
@@ -112,6 +114,6 @@ final_pred = np.argmax(total_pred, axis=1)
 result=np.vstack((np.arange(1,X_test.shape[0]+1),final_pred)).T
 
 df = pd.DataFrame(result,columns=('Id','Prediction'))
-df.to_csv(submission_path + '9gaussiansvm_submissionsqrt.csv',sep=',',index=False)
+df.to_csv(submission_path + '9gaussiansvm_submissions3channels.csv',sep=',',index=False)
 
 

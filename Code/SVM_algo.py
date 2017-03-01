@@ -69,8 +69,8 @@ class SVM():
                 y_tr[i]=1
             else:
                 y_tr[i]=-1
-        print(y_tr[y_tr==-1].shape)
-        print(y_tr[y_tr==1].shape)
+        #print(y_tr[y_tr==-1].shape)
+        #print(y_tr[y_tr==1].shape)
 
         #self.K = self.kernel(X_tr, X_tr)
     

@@ -70,10 +70,12 @@ def cell_histogram(x0,y0,gx,gy,nbins):
             histogram[i,c] += np.sum(m0[:,:,c][np.where(b0[:,:,c]==i)])
             histogram[i,c] += np.sum(m1[:,:,c][np.where(b1[:,:,c]==i)])
     
-    return np.mean(histogram,axis=1)
+    #return np.mean(histogram,axis=1) #mean
+    return np.hstack(histogram.T) #all channels
 
 def all_histo(image,gx,gy,nbins):
-    all_histo=np.zeros((4,4,nbins))
+    #all_histo=np.zeros((4,4,nbins)) #with mean
+    all_histo=np.zeros((4,4,nbins*3)) #with all channels
     for i in range(4):
         for j in range(4):
             all_histo[i,j,:]=cell_histogram(8*i,8*j,gx,gy,nbins)

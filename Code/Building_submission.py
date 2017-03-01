@@ -14,7 +14,7 @@ import numpy as np
 X_tr_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Xtr.csv'
 Y_tr_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Ytr.csv'
 X_te_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Xte.csv'
-submission_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Submissionnbins10.csv'
+submission_path='/Users/estelleaflalo/Desktop/M2_Data_Science/Second_Period/Kernel_Methods/Project/Kernel_methods/Submissions/'
 
 print "Loading the dataframes"
 df_X=pd.read_csv(X_tr_path, header=None)
@@ -54,7 +54,7 @@ for i in range(len(Xte_reshape)):
 X_test=Xte_reshape    
 
 print ("Building the features matrices (train and test) based on HOG model")
-nbins=10
+nbins=9
 nblocks=4
 ncells=4
 print "The parameters of the HOG model are the following : number of bins for the orientations histograms = %d, number of blocks : %d, number of cells per block : %d"%(nbins,nblocks,ncells)
@@ -69,7 +69,7 @@ for i in range(X_train.shape[0]):
         print i
         
 new_features_train=temp1[1:]     
-
+new_features_train=np.sqrt(new_features_train)
 
 temp2=np.zeros(9*ncells*nbins) #nbins (ici 9) * nb_position_blocks (ici 9) * nombre de cellules par block (4)
 for i in range(X_test.shape[0]):
@@ -81,7 +81,7 @@ for i in range(X_test.shape[0]):
         print i
         
 new_features_test=temp2[1:]       
-
+new_features_test=np.sqrt(new_features_test)
 #SVM
 print "Building the SVM-multiclass model"
 
@@ -97,6 +97,7 @@ X_test=new_features_test
 Ktrain = kernel(X_train, X_train)
 total_pred = np.zeros(X_test.shape[0])
 for i in range(10):
+    print ("SVM on class " , i)
     classe = i
     model = SVM_algo.SVM(0.5,Ktrain,kernel,.1, classe)
     model.fit(X_train, y_train)
@@ -111,6 +112,6 @@ final_pred = np.argmax(total_pred, axis=1)
 result=np.vstack((np.arange(1,X_test.shape[0]+1),final_pred)).T
 
 df = pd.DataFrame(result,columns=('Id','Prediction'))
-df.to_csv(submission_path,sep=',',index=False)
+df.to_csv(submission_path + '9gaussiansvm_submissionsqrt.csv',sep=',',index=False)
 
 

@@ -38,12 +38,18 @@ print("Size of testing set :    {}".format(X_test.shape[0]))
 
 
 print "Preprocessing of the images"
+from astropy.convolution import convolve, Gaussian2DKernel, Tophat2DKernel,Box2DKernel,TrapezoidDisk2DKernel
+
 
 Xtr_reshape = X_train.reshape(( X_train.shape[0],3,32,32)).transpose(0,2,3,1)
+kernel =Tophat2DKernel(0.35)
 for i in range(len(Xtr_reshape)):
     Xtr_reshape[i,:,:,0] -= Xtr_reshape[i,:,:,0].min()
     Xtr_reshape[i,:,:,1] -= Xtr_reshape[i,:,:,1].min()
     Xtr_reshape[i,:,:,2] -= Xtr_reshape[i,:,:,2].min()
+    Xtr_reshape[i,:,:,0]=convolve(Xtr_reshape[i,:,:,0], kernel)
+    Xtr_reshape[i,:,:,1]=convolve(Xtr_reshape[i,:,:,1],kernel)
+    Xtr_reshape[i,:,:,2]=convolve(Xtr_reshape[i,:,:,2], kernel)
 X_train=Xtr_reshape   
  
 Xte_reshape = X_test.reshape((X_test.shape[0],3,32,32)).transpose(0,2,3,1)
@@ -51,6 +57,9 @@ for i in range(len(Xte_reshape)):
     Xte_reshape[i,:,:,0] -= Xte_reshape[i,:,:,0].min()
     Xte_reshape[i,:,:,1] -= Xte_reshape[i,:,:,1].min()
     Xte_reshape[i,:,:,2] -= Xte_reshape[i,:,:,2].min()
+    Xte_reshape[i,:,:,0]=convolve(Xte_reshape[i,:,:,0], kernel)
+    Xte_reshape[i,:,:,1]=convolve(Xte_reshape[i,:,:,1],kernel)
+    Xte_reshape[i,:,:,2]=convolve(Xte_reshape[i,:,:,2], kernel)
 X_test=Xte_reshape    
 
 print ("Building the features matrices (train and test) based on HOG model")
@@ -59,8 +68,8 @@ nblocks=4
 ncells=4
 print "The parameters of the HOG model are the following : number of bins for the orientations histograms = %d, number of blocks : %d, number of cells per block : %d"%(nbins,nblocks,ncells)
 
-#temp1=np.zeros(9*ncells*nbins) #mean #nbins (ici 9) * nb_position_blocks (ici 9) * nombre de cellules par block (4)
-temp1=np.zeros(9*ncells*nbins*3)  #all channels
+temp1=np.zeros(9*ncells*nbins) #mean #nbins (ici 9) * nb_position_blocks (ici 9) * nombre de cellules par block (4)
+#temp1=np.zeros(9*ncells*nbins*3)  #all channels
 for i in range(X_train.shape[0]):
     image=X_train[i]
     gx,gy=HOG.gradients(image)
@@ -72,8 +81,8 @@ for i in range(X_train.shape[0]):
 new_features_train=temp1[1:]     
 #new_features_train=np.sqrt(new_features_train)
 
-#temp2=np.zeros(9*ncells*nbins) #mean #nbins (ici 9) * nb_position_blocks (ici 9) * nombre de cellules par block (4)
-temp2=np.zeros(9*ncells*nbins*3)  #all channels
+temp2=np.zeros(9*ncells*nbins) #mean #nbins (ici 9) * nb_position_blocks (ici 9) * nombre de cellules par block (4)
+#temp2=np.zeros(9*ncells*nbins*3)  #all channels
 for i in range(X_test.shape[0]):
     image=X_test[i]
     gx,gy=HOG.gradients(image)
@@ -114,6 +123,6 @@ final_pred = np.argmax(total_pred, axis=1)
 result=np.vstack((np.arange(1,X_test.shape[0]+1),final_pred)).T
 
 df = pd.DataFrame(result,columns=('Id','Prediction'))
-df.to_csv(submission_path + '9gaussiansvm_submissions3channels.csv',sep=',',index=False)
+df.to_csv(submission_path + 'prepr9gaussiansvm_submissions3channels.csv',sep=',',index=False)
 
 

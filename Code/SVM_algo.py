@@ -2,7 +2,7 @@ import cvxopt
 import numpy as np
 import pandas as pd
 import kernel_functions
-from sklearn.metrics import accuracy_score
+from accuracy import accuracy_score
 
 def qp(P, q, A, b, C=100, l=1e-8, verbose=True):
     

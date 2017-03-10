@@ -38,18 +38,14 @@ print("Size of testing set :    {}".format(X_test.shape[0]))
 
 
 print "Preprocessing of the images"
-from astropy.convolution import convolve, Gaussian2DKernel, Tophat2DKernel,Box2DKernel,TrapezoidDisk2DKernel
-
 
 Xtr_reshape = X_train.reshape(( X_train.shape[0],3,32,32)).transpose(0,2,3,1)
-kernel =Tophat2DKernel(0.35)
+
 for i in range(len(Xtr_reshape)):
     Xtr_reshape[i,:,:,0] -= Xtr_reshape[i,:,:,0].min()
     Xtr_reshape[i,:,:,1] -= Xtr_reshape[i,:,:,1].min()
     Xtr_reshape[i,:,:,2] -= Xtr_reshape[i,:,:,2].min()
-    Xtr_reshape[i,:,:,0]=convolve(Xtr_reshape[i,:,:,0], kernel)
-    Xtr_reshape[i,:,:,1]=convolve(Xtr_reshape[i,:,:,1],kernel)
-    Xtr_reshape[i,:,:,2]=convolve(Xtr_reshape[i,:,:,2], kernel)
+
 X_train=Xtr_reshape   
  
 Xte_reshape = X_test.reshape((X_test.shape[0],3,32,32)).transpose(0,2,3,1)
@@ -57,9 +53,7 @@ for i in range(len(Xte_reshape)):
     Xte_reshape[i,:,:,0] -= Xte_reshape[i,:,:,0].min()
     Xte_reshape[i,:,:,1] -= Xte_reshape[i,:,:,1].min()
     Xte_reshape[i,:,:,2] -= Xte_reshape[i,:,:,2].min()
-    Xte_reshape[i,:,:,0]=convolve(Xte_reshape[i,:,:,0], kernel)
-    Xte_reshape[i,:,:,1]=convolve(Xte_reshape[i,:,:,1],kernel)
-    Xte_reshape[i,:,:,2]=convolve(Xte_reshape[i,:,:,2], kernel)
+
 X_test=Xte_reshape    
 
 print ("Building the features matrices (train and test) based on HOG model")
